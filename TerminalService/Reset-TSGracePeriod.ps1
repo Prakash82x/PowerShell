@@ -1,5 +1,5 @@
 ﻿## This Script is intended to be used for Querying remaining time and resetting Terminal Server (RDS) Grace Licensing Period to Default 120 Days.
-## Developed by Prakash Kumar (prakash82x@gmail.com) May 28th 2016
+## Developed by Prakash Kumar (prakash82x[at]gmail[dot]com) May 28th 2016
 ## www.adminthing.blogspot.com
 ## Disclaimer: Please test this script in your test environment before executing on any production server.
 ## Author will not be responsible for any misuse/damage caused by using it.
