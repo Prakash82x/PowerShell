@@ -2,6 +2,14 @@
 # This Script can be used to enable AD integration on Dell iDRACs so that Members   #
 # of a specific AD Group can logon to the iDRAC with their domain id.               #
 # Just fill in the details below in the Set variables section.                      #
+#                                                                                   #
+# Please note that This script can only be used from a Windows server which has     #
+# racadm command line suite installed. Please download it from Dell or use the Link #
+# below before executing this script.                                               #
+#                                                                                   #
+# Dell's command line utility racadm can be downloaded from here:                   #
+# https://www.dell.com/support/home/us/en/04/drivers/driversdetails?driverid=n3gc9  #
+#                                                                                   #
 # Example below:                                                                    #   
 # .\iDRAC-SetADConfig.ps1 -iDRACName iDRAC.mydomain.com -User root -Password calvin #
 #####################################################################################
