@@ -1,8 +1,11 @@
 ﻿## This Script is intended to be used for Querying remaining time and resetting Terminal Server (RDS) Grace Licensing Period to Default 120 Days.
-## Developed by Prakash Kumar (prakash82x[at]gmail[dot]com) May 28th 2016
+## Developed by Prakash Kumar (prakash82x@gmail.com) May 28th 2016
 ## www.adminthing.blogspot.com
 ## Disclaimer: Please test this script in your test environment before executing on any production server.
 ## Author will not be responsible for any misuse/damage caused by using it.
+Param(
+        [Parameter(Mandatory=$false)] [Switch]$Force
+     )
 
 Clear-Host
 $ErrorActionPreference = "SilentlyContinue"
@@ -13,9 +16,14 @@ Write-Host -fore Green ======================================================
 Write-Host -fore Green 'Terminal Server (RDS) grace period Days remaining are' : $GracePeriod
 Write-Host -fore Green ======================================================  
 Write-Host
-$Response = Read-Host "Do you want to reset Terminal Server (RDS) Grace period to Default 120 Days ? (Y/N)"
 
-if ($Response -eq "Y") {
+## Check if -Force Parameter has been used, If so, It will not prompt for Y/N while executing the script and will simply reset the Grace Period.
+If (-not $Force) 
+{
+$Response = Read-Host "Do you want to reset Terminal Server (RDS) Grace period to Default 120 Days ? (Y/N)"
+}
+
+if ($Response -eq "Y" -or $Force) {
 ## Reset Terminal Services Grace period to 120 Days
 
 $definition = @"
@@ -54,8 +62,10 @@ Remove-Item 'HKLM:\SYSTEM\CurrentControlSet\Control\Terminal Server\RCM\GracePer
 
 write-host
 Write-host -ForegroundColor Red 'Resetting, Please Wait....'
-Start-Sleep -Seconds 10 
-  }
+Start-Sleep -Seconds 10
+
+}
+
 Else 
     {
 Write-Host
@@ -70,18 +80,10 @@ Write-Host -fore Yellow =====================================================
 Write-Host -fore Yellow 'Terminal Server (RDS) grace period Days remaining are' : $GracePost
 Write-Host -fore Yellow =====================================================
 
-$Message =  [System.Windows.MessageBox]::Show("Service 'Remote Desktop Services' requires a restart for the Grace Period to be Reset. Restarting this Service will disconnect all existing active RDP session(s) and this Server will start accepting RDP connections after ~2 minutes.`n`nDo you want to continue ? `n`nYes would restart the service.","Service Restart Required (Remote Desktop Services)","YesNoCancel","Warning")
-  switch  ($Message) {
-    'Yes' {
-           Restart-service TermService -Force -PassThru
-           }
-     'No' {
-            [System.Windows.MessageBox]::Show("Please Restart the Service Remote Desktop Service manually to be able to logon to this server via RDP.","Service Restart Required (Remote Desktop Services)")
-            }
-     'Cancel' {
-            [System.Windows.MessageBox]::Show("Please Restart the Service Remote Desktop Service manually to be able to logon to this server via RDP.","Service Restart Required (Remote Desktop Services)")
-            }
-  }
+if ($Response -eq "Y" -or $Force)
+        {
+            Write-Host -Fore Cyan `n"IMPORTANT: Please make sure you restart following services manually to bring this reset in effect:`n`n* Remote Desktop Configuration Properties `n* Remote Desktop Services"
+        }
 
-## Cleanup of Variables
+## Cleanup of Variable
 Remove-Variable * -ErrorAction SilentlyContinue
