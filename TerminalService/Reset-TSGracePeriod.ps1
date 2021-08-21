@@ -1,4 +1,4 @@
-﻿## This Script is intended to be used for Querying remaining time and resetting Terminal Server (RDS) Grace Licensing Period to Default 120 Days.
+# This Script is intended to be used for Querying remaining time and resetting Terminal Server (RDS) Grace Licensing Period to Default 120 Days.
 ## Developed by Prakash Kumar (prakash82x@gmail.com) May 28th 2016
 ## www.adminthing.blogspot.com
 ## Disclaimer: Please test this script in your test environment before executing on any production server.
@@ -10,8 +10,11 @@ Param(
 Clear-Host
 $ErrorActionPreference = "SilentlyContinue"
 
+## Check if PowerShell Console has been launched As Administrator
+if (([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
+
 ## Display current Status of remaining days from Grace period.
-$GracePeriod = (Invoke-WmiMethod -PATH (gwmi -namespace root\cimv2\terminalservices -class win32_terminalservicesetting).__PATH -name GetGracePeriodDays).daysleft
+$GracePeriod = (Invoke-CimMethod -InputObject (Get-CimInstance -Namespace root/CIMV2/TerminalServices -ClassName Win32_TerminalServiceSetting) -MethodName GetGracePeriodDays).DaysLeft
 Write-Host -fore Green ======================================================
 Write-Host -fore Green 'Terminal Server (RDS) grace period Days remaining are' : $GracePeriod
 Write-Host -fore Green ======================================================  
@@ -74,7 +77,7 @@ Write-Host -ForegroundColor Yellow '**You Chose not to reset Grace period of Ter
 
 ## Display Remaining Days again as final status
 tlsbln.exe
-$GracePost = (Invoke-WmiMethod -PATH (gwmi -namespace root\cimv2\terminalservices -class win32_terminalservicesetting).__PATH -name GetGracePeriodDays).daysleft
+$GracePost = (Invoke-CimMethod -InputObject (Get-CimInstance -Namespace root/CIMV2/TerminalServices -ClassName Win32_TerminalServiceSetting) -MethodName GetGracePeriodDays).DaysLeft
 Write-Host
 Write-Host -fore Yellow =====================================================
 Write-Host -fore Yellow 'Terminal Server (RDS) grace period Days remaining are' : $GracePost
@@ -84,6 +87,12 @@ if ($Response -eq "Y" -or $Force)
         {
             Write-Host -Fore Cyan `n"IMPORTANT: Please make sure you restart following services manually to bring this reset in effect:`n`n* Remote Desktop Configuration Properties `n* Remote Desktop Services"
         }
-
-## Cleanup of Variable
+} 
+Else
+{
+    Write-Host -fore RED =====================================================
+    Write-host -ForegroundColor RED *`0`0`0`0 Please Launch PowerShell as Administrator `0`0`0`0*
+    Write-Host -fore RED =====================================================
+}
+## Cleanup of Variables
 Remove-Variable * -ErrorAction SilentlyContinue
