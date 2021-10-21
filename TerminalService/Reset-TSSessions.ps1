@@ -19,7 +19,7 @@ if ($MySessions -match "$UserName")
         Write-host "--------        ---------        ------------"
         Write-Host "$User   $SessionID                $SessionState"
         Write-host "--------        ---------        ------------"
-        Write-host -ForegroundColor Red `n"Resetting Session for`t $User on $env:COMPUTERNAME : Session ID $SessionID : SessionState $SessionState"
+        Write-host -ForegroundColor Red `n"Resetting Session for`t $User on $ServerName : Session ID $SessionID : SessionState $SessionState"
         rwinsta /server:$ServerName $SessionID
 }
 
