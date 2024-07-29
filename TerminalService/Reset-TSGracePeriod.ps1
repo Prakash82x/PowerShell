@@ -65,6 +65,12 @@ Remove-Item 'HKLM:\SYSTEM\CurrentControlSet\Control\Terminal Server\RCM\GracePer
 
 write-host
 Write-host -ForegroundColor Red 'Resetting, Please Wait....'
+try {
+    Restart-Service TermService -Force
+    Write-Host "The Remote Desktop Services have been restarted successfully."
+} catch {
+    Write-Error "An error occurred while restarting the Remote Desktop Services: $_"
+}
 Start-Sleep -Seconds 10
 
 }
