@@ -8,3 +8,9 @@ We sometimes find ourselves in situation when server is nearing to the end of gr
 
 I have created a Script which can be used to query the remaining days of grace period and extend/reset it to next 120 days in case needed.
 
+Note: You will have to restart following services for the reset to come into effect.
+
+    Remote Desktop Configuration Properties
+    Remote Desktop Services
+
+ As soon as these services are restarted all the active sessions will be disconnected (Not logged off), Wait for a minute and reconnect again.
